@@ -1,0 +1,38 @@
+#include "robot-config.h"
+
+
+/*****************************base motors*************************************/
+int vLeft;              //velocity of the robot left motor
+int vRight;             //velocity of the rbot right motor
+
+/*****************************intake motors**********************************/
+bool intakeDire=false;
+bool intakeTog=false;
+
+/*****************************puncher motor**********************************/
+bool puncherToggle=false;
+
+/****************************motors setting**********************************/
+
+bool motorsState[6]{false,false,false,false};       // left motor, right motor, intake, puncher
+
+void setMotors(){
+    if(motorsState[0]){
+        
+    }
+    if(motorsState[1]){
+        
+    }
+    if(motorsState[2]){
+        
+    }
+    if(motorsState[3]){
+        
+    }
+}
+
+
+int main() {
+   
+    setMotors();
+}
