@@ -6,7 +6,7 @@ int vLeft;              //velocity of the robot left motor
 int vRight;             //velocity of the rbot right motor
 
 /*****************************intake motors**********************************/
-bool intakeDire=false;
+bool intakeDire=false;              //true=intake   false=fliper
 bool intakeTog=false;
 
 /*****************************puncher motor**********************************/
@@ -14,33 +14,37 @@ bool puncherToggle=false;
 
 /****************************motors setting**********************************/
 
-bool motorsState[6]{false,false,false,false};       // left motor, right motor, intake, puncher
+bool motorsState[8]{false,false,false,false};       // left motor, right motor, intake, puncher
 
 void setMotors(){
     if(motorsState[0]){
         
     }else{
-        Motor.stop();
+        Motor1.stop();
     }
     if(motorsState[1]){
 
     }else{
-        Motor.stop();
+        Motor2.stop();
     }
     if(motorsState[2]){
         
     }else{
-        Motor.stop();
+        Motor3.stop();
     }
     if(motorsState[3]){
         
     }else{
-        Motor.stop();
+        Motor4.stop();
     }
 }
 
+void controllerDisplay(){
+
+}
 
 int main() {
-   
+    
+    controllerDisplay();
     setMotors();
 }
