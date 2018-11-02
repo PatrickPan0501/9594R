@@ -36,6 +36,10 @@ void setMotors(){
         
     }else{
         Motor4.stop();
+    }if(motorState[4]){
+    
+    }else{
+        Motor5.stop();
     }
 }
 
