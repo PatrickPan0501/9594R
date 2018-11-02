@@ -1,0 +1,5 @@
+#define RIGHTMOTOR 1
+#define LEFTMOTOR 2
+#define INTAKEMOTOR 3
+#define PUNCHERMOTOR1 4
+#define PUNCHERMOTOR2 5
