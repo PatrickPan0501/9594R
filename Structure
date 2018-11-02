@@ -1,5 +1,5 @@
 #include "robot-config.h"
-
+vex::competition Competition;
 
 /*****************************base motors*************************************/
 int vLeft;              //velocity of the robot left motor
@@ -14,7 +14,7 @@ bool puncherToggle=false;
 
 /****************************motors setting**********************************/
 
-bool motorsState[8]{false,false,false,false};       // left motor, right motor, intake, puncher
+bool motorsState[8]{false,false,false,false,false};       // left motor, right motor, intake, puncher1, puncher 2
 
 void setMotors(){
     if(motorsState[0]){
@@ -39,12 +39,37 @@ void setMotors(){
     }
 }
 
+/*******************************pre-game setup*****************************/
+void pre_auton( void ) 
+{
+
+}
+
+/*******************************atonomous********************************/
+void autonomous(){
+
+}
+
+/*******************************User Control*****************************/
+void userControl(  ) {
+    while(true){
+    
+    }
+}
+
+
 void controllerDisplay(){
 
 }
 
 int main() {
-    
-    controllerDisplay();
-    setMotors();
+   //sets the robot up, all motors at right angle
+    pre_auton();
+
+    Competition.autonomous( autonomous );
+    Competition.drivercontrol( usercontrol );
+    while(true)
+    {
+        task::sleep(100);
+    }
 }
