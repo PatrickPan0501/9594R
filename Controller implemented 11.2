@@ -22,11 +22,14 @@ void setupMotors(){
     if(vLeft!=0){
         motorsState[0]=true;
     }
-    if(vRIght!=0){
+    if(vRight!=0){
         motorsState[1]=true;
     }
     if(intakeTog){
         motorsState[2]=true;
+    }
+    if(!intakeDire){
+        vIntake=-vIntake;
     }
     if(puncherToggle){
         motorsState[3]=true;
@@ -49,11 +52,7 @@ void setMotors(){
     }
     if(motorsState[2]){
         Motor3.setVelocity(vIntake, rpm);
-        if(intakeDire){
-            Motor3.spin(fwd);
-        }else{
-            Motor3.spin(bwd);
-        }
+        Motor3.spin(fwd);
     }else{
         Motor3.stop();
     }
@@ -88,6 +87,31 @@ void getValues(){
         vRight = -110;
     }
 }
+
+
+/*******************************display status in the program*****************************/
+
+void controllerDisplay(){
+    Controller1.Screen.print("Intake: ");
+    if(intakeTog){
+        Controller1.Screen.print("on ");
+        if(intakeDire){
+            Controller1.Screen.print("Intake Mode");
+        }else{
+            Controller1.Screen.print("Flipping Mode");
+        }
+    }else{
+        Controller1.Screen.print("off");
+    }
+    Controller1.Screen.newLine();
+    Controller1.Screen.print("Puncher: ");
+    if(puncherToggle){
+        Controller1.Screen.print("on");
+    }else{
+        Controller1.Screen.print("off");
+    }
+}
+
 /*******************************pre-game setup*****************************/
 void pre_auton( void ) {
 
@@ -130,31 +154,12 @@ void userControl(  ) {
         setupMotors();
         setMotors();
         controllerDisplay();
-        motorsState=false;
+        motorsState[8]=false;
     }
 }
 
 
-void controllerDisplay(){
-    Controller.Screen.print("Intake: ");
-    if(intakeTog){
-        Controller.Screen.print("on ");
-        if(intakeDire){
-            Controller.Screen.print("Intake Mode");
-        }else{
-            Controller.Screen.print("Flipping Mode");
-        }
-    }else{
-        Controller.Screen.print("off");
-    }
-    Controller.Screen.newLine();
-    Controller.Screen.print("Puncher: ");
-    if(puncherToggle){
-        Controller.Screen.print("on");
-    }else{
-        Controller.Screen.print("off");
-    }
-}
+
 
 int main() {
    //sets the robot up, all motors at right angle
