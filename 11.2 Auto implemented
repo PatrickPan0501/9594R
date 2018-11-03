@@ -1,0 +1,232 @@
+#include "robot-config.h"
+vex::competition Competition;
+
+/*****************************base motors*************************************/
+int vLeft;              //velocity of the robot left motor
+int vRight;             //velocity of the rbot right motor
+
+/*****************************intake motors**********************************/
+bool intakeDire=false;              //true=intake   false=fliper
+bool intakeTog=false;               //true=on    false=off
+int  vIntake=115;
+
+/*****************************puncher motor**********************************/
+bool puncherToggle=false;
+int  vPuncher=20;
+
+/****************************motors setting**********************************/
+
+bool motorsState[8]{false,false,false,false,false};       // left motor, right motor, intake, puncher1, puncher 2
+
+void setupMotors(){
+    if(vLeft!=0){
+        motorsState[0]=true;
+    }
+    if(vRight!=0){
+        motorsState[1]=true;
+    }
+    if(intakeTog){
+        motorsState[2]=true;
+    }
+    if(!intakeDire){
+        vIntake=-vIntake;
+    }
+    if(puncherToggle){
+        motorsState[3]=true;
+        motorsState[4]=true;
+    }
+}
+
+void setMotors(){
+    if(motorsState[0]){
+        Motor1.setVelocity(vLeft, rpm);
+        Motor1.spin(fwd);
+    }else{
+        Motor1.stop();
+    }
+    if(motorsState[1]){
+        Motor2.setVelocity(vRight, rpm);
+        Motor2.spin(fwd);
+    }else{
+        Motor2.stop();
+    }
+    if(motorsState[2]){
+        Motor3.setVelocity(vIntake, rpm);
+        Motor3.spin(fwd);
+    }else{
+        Motor3.stop();
+    }
+    if(motorsState[3]){
+        Motor4.setVelocity(vPuncher, rpm);
+        Motor4.spin(fwd);
+    }else{
+        Motor4.stop();
+    }
+    if(motorsState[4]){
+        Motor5.setVelocity(vPuncher, rpm);
+        Motor5.spin(fwd);
+    }else{
+        Motor5.stop();
+    }
+}
+
+/*******************************get all the values on sensors*****************************/
+void getValues(){
+    vLeft=Controller1.Axis3.value();
+    vRight=Controller1.Axis2.value();
+    if(vLeft >110){
+        vLeft = 110;
+    }
+    if(vLeft <-110){
+        vLeft = -110;
+    }
+    if(vRight >110){
+        vRight = 110;
+    }
+    if(vRight <-110){
+        vRight = -110;
+    }
+}
+
+
+/*******************************display status in the program*****************************/
+
+void controllerDisplay(){
+    Controller1.Screen.print("Intake: ");
+    if(intakeTog){
+        Controller1.Screen.print("on ");
+        if(intakeDire){
+            Controller1.Screen.print("Intake Mode");
+        }else{
+            Controller1.Screen.print("Flipping Mode");
+        }
+    }else{
+        Controller1.Screen.print("off");
+    }
+    Controller1.Screen.newLine();
+    Controller1.Screen.print("Puncher: ");
+    if(puncherToggle){
+        Controller1.Screen.print("on");
+    }else{
+        Controller1.Screen.print("off");
+    }
+}
+
+/*******************************pre-game setup*****************************/
+void pre_auton( void ) {
+
+}
+
+/*******************************atonomous********************************/
+void redFlag(){
+/*******************************turn right*******************************/
+    Motor1.rotateFor(0.520,timeUnits::sec,110,velocityUnits::pct);
+    Motor2.rotateFor(0.520,timeUnits::sec,-110,velocityUnits::pct);
+    task::sleep(10);
+/********************************push flag********************************/
+    Motor1.rotateFor(0.85,timeUnits::sec,110,velocityUnits::pct);
+    Motor2.rotateFor(0.85,timeUnits::sec,110,velocityUnits::pct);
+    task::sleep(10);
+/***********************move back to shoot top flag************************/   
+    Motor1.rotateFor(1.112,timeUnits::sec,-110,velocityUnits::pct);
+    Motor2.rotateFor(1.112,timeUnits::sec,-110,velocityUnits::pct);
+    task::sleep(10);
+/*******************************shoot top flag****************************/
+    Motor4.rotateFor(359,rotationUnits::deg,50,velocityUnits::pct);
+    Motor5.rotateFor(359,rotationUnits::deg,50,velocityUnits::pct);
+    task::sleep(10);
+/***************************move back to platform**************************/ 
+    Motor1.rotateFor(0.222,timeUnits::sec,-110,velocityUnits::pct);
+    Motor2.rotateFor(0.222,timeUnits::sec,-110,velocityUnits::pct);
+    task::sleep(10);
+/*******************************turn left*****************************/
+    Motor1.rotateFor(0.520,timeUnits::sec,-110,velocityUnits::pct);
+    Motor2.rotateFor(0.520,timeUnits::sec,110,velocityUnits::pct);
+    task::sleep(10); 
+/*******************************up platform*****************************/
+    Motor1.rotateFor(1,timeUnits::sec,110,velocityUnits::pct);
+    Motor2.rotateFor(1,timeUnits::sec,110,velocityUnits::pct);
+    task::sleep(10);
+}
+
+void redFar(){
+/*******************************turn right*******************************/
+    Motor1.rotateFor(0.520,timeUnits::sec,110,velocityUnits::pct);
+    Motor2.rotateFor(0.520,timeUnits::sec,-110,velocityUnits::pct);
+    task::sleep(10);
+/*****************************move to platform********************************/
+    Motor1.rotateFor(0.8889927,timeUnits::sec,110,velocityUnits::pct);
+    Motor2.rotateFor(0.8889927,timeUnits::sec,110,velocityUnits::pct);
+    task::sleep(10);
+/*******************************up platform*****************************/
+    Motor1.rotateFor(1,timeUnits::sec,110,velocityUnits::pct);
+    Motor2.rotateFor(1,timeUnits::sec,110,velocityUnits::pct);
+    task::sleep(10);
+}
+
+void blueFlag(){
+    // insert code
+}
+
+void blueFar(){
+    //insert code
+}
+
+void autonomous(){
+    Controller1.ButtonX.pressed(redFlag);
+    Controller1.ButtonB.pressed(redFar);
+    Controller1.ButtonY.pressed(blueFlag);
+    Controller1.ButtonA.pressed(blueFar);
+
+}
+
+/*******************************User Control*****************************/
+void userControl() {
+    while(true){
+        getValues();
+        if(Controller1.ButtonR1.pressing()&& intakeTog == false)
+        {
+           intakeTog = true;
+           task::sleep(300);
+        }
+        if(Controller1.ButtonR1.pressing()&& intakeTog)
+        {
+           intakeTog = false;
+           task::sleep(300);
+        }
+        if(Controller1.ButtonR2.pressing()&& intakeTog)
+        {
+           if(intakeDire == true){
+                intakeDire = false;
+           }
+           else {
+                intakeDire = true;
+           }
+           task::sleep(300);
+        }
+        if(Controller1.ButtonL1.pressing()){
+            puncherToggle=true;
+        }else{
+            puncherToggle=false;
+        }
+        setupMotors();
+        setMotors();
+        controllerDisplay();
+        motorsState[8]=false;
+    }
+}
+
+
+
+
+int main() {
+   //sets the robot up, all motors at right angle
+    pre_auton();
+
+    Competition.autonomous( autonomous );
+    Competition.drivercontrol( userControl );
+    while(true)
+    {
+        task::sleep(100);
+    }
+}
